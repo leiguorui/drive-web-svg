@@ -5,7 +5,7 @@ before_script:
 - git config --global user.email "leiguorui@goodow.com"
 - git config --global user.name "leiguorui"
 - npm install -g bower
-- cd gh-pages/ && git pull origin gh-pages && git remote set-url origin "https://${GH_TOKEN}@github.com/leiguorui/drive-web-svg.git"
+- cd gh-pages/ && git pull && git remote set-url origin "https://${GH_TOKEN}@github.com/leiguorui/drive-web-svg.git"
 - cd ${TRAVIS_BUILD_DIR}
 script:
 - bower install
