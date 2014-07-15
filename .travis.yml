@@ -6,6 +6,7 @@ before_script:
 - git config --global user.name "leiguorui"
 - npm install -g bower
 script:
+- cd gh-pages
 - bower install
 - gulp
 env:
