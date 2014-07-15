@@ -142,7 +142,7 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         return dataMap;
       }
 
-      store.load("svg/5", rtpg.onFileLoaded, rtpg.initializeModel, rtpg.handleErrors);
+      store.load("svg/10", rtpg.onFileLoaded, rtpg.initializeModel, rtpg.handleErrors);
 
         //发送数据
       $scope.$watch('sendData', function () {
@@ -154,5 +154,4 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
       $scope.clearSVG = function(){
         rtpg.realtimeDoc.getModel().getRoot().get('data').clear();
       }
-    }])
-
+    }]);

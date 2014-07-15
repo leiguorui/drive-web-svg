@@ -1,12 +1,12 @@
 {
-  "name": "goodow-ui",
+  "name": "drive-web-svg",
   "version": "0.1.0",
-  "homepage": "https://github.com/shangmin1990/goodow-ui.git",
+  "homepage": "https://github.com/leiguorui/drive-web-svg.git",
   "author": "benjamin",
   "devDependencies": {
-    "gulp": "~3.6.2",
+    "gulp": "~3.8.6",
     "gulp-concat": "~2.2.0",
-    "gulp-util": "~2.2.14",
+    "gulp-util": "~2.2.20",
     "gulp-uglify": "~0.2.1",
     "gulp-jshint": "~1.5.5"
   }

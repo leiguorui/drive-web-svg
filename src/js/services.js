@@ -7,13 +7,6 @@ var serviceModule;
 // Demonstrate how to register services
 // In this case it is a simple value service.
 (function (window, angular, undefined) {
-  /**
-   * how to create a service?
-   1.value method
-   2.provider method
-   3.factory method
-   4.service method
-   */
 
   serviceModule = angular.module('drive.web.svg.services', [])
       .factory('goodowConstant', function () {
