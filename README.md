@@ -1,162 +1,59 @@
 
 
-GitHub Flavored Markdown
+基于realtime-store的画板
 ================================
 
-*View the [source of this content](http://github.github.com/github-flavored-markdown/sample_content.html).*
+*先上 demo [demo](http://leiguorui.github.io/drive-web-svg/) 演示效果.*
 
-Let's get the whole "linebreak" thing out of the way. The next paragraph contains two phrases separated by a single newline character:
-
-Roses are red
-Violets are blue
-
-The next paragraph has the same phrases, but now they are separated by two spaces and a newline character:
-
-Roses are red  
-Violets are blue
-
-Oh, and one thing I cannot stand is the mangling of words with multiple underscores in them like perform_complicated_task or do_this_and_do_that_and_another_thing.
-
-A bit of the GitHub spice
--------------------------
-
-In addition to the changes in the previous section, certain references are auto-linked:
-
-* SHA: be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2
-* User@SHA ref: mojombo@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2
-* User/Project@SHA: mojombo/god@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2
-* \#Num: #1
-* User/#Num: mojombo#1
-* User/Project#Num: mojombo/god#1
-
-These are dangerous goodies though, and we need to make sure email addresses don't get mangled:
-
-My email addy is tom@github.com.
-
-Math is hard, let's go shopping
--------------------------------
-
-In first grade I learned that 5 > 3 and 2 < 7. Maybe some arrows. 1 -> 2 -> 3. 9 <- 8 <- 7.
-
-Triangles man! a^2 + b^2 = c^2
-
-We all like making lists
+把画板引入你的项目
 ------------------------
 
-The above header should be an H2 tag. Now, for a list of fruits:
+使用方法
 
-* Red Apples
-* Purple Grapes
-* Green Kiwifruits
+1. 引入依赖，及编译后的文件js文件:
 
-Let's get crazy:
+        <script type="text/javascript" src="bower_components/bower-sockjs-client/sockjs.min.js"></script>
+        <script type="text/javascript" src="bower_components/realtime-store/realtime.store.js"></script>
+        <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+        <script type="text/javascript" src="bower_components/angular-touch/angular-touch.js"></script>
+        <script type="text/javascript" src="bower_components/d3/d3.js"></script>
+        <script type="text/javascript" src="bower-drive-web-svg/drive-web-svg.js"></script>
 
-1.  This is a list item with two paragraphs. Lorem ipsum dolor
-    sit amet, consectetuer adipiscing elit. Aliquam hendrerit
-    mi posuere lectus.
+2. 设置画板的div:
 
-    Vestibulum enim wisi, viverra nec, fringilla in, laoreet
-    vitae, risus. Donec sit amet nisl. Aliquam semper ipsum
-    sit amet velit.
+        <div ng-controller="SVGController">
+            <goodowcanvas></goodowcanvas>
+        </div>
 
-2.  Suspendisse id sem consectetuer libero luctus adipiscing.
-
-What about some code **in** a list? That's insane, right?
-
-1. In Ruby you can map like this:
-
-        ['a', 'b'].map { |x| x.uppercase }
-
-2. In Rails, you can do a shortcut:
-
-        ['a', 'b'].map(&:uppercase)
-
-Some people seem to like definition lists
-
-<dl>
-  <dt>Lower cost</dt>
-  <dd>The new version of this product costs significantly less than the previous one!</dd>
-  <dt>Easier to use</dt>
-  <dd>We've changed the product so that it's much easier to use!</dd>
-</dl>
-
-I am a robot
+需要的外部依赖
 ------------
-
-Maybe you want to print `robot` to the console 1000 times. Why not?
-
-    def robot_invasion
-      puts("robot " * 1000)
-    end
-
-You see, that was formatted as code because it's been indented by four spaces.
-
-How about we throw some angle braces and ampersands in there?
-
-    <div class="footer">
-        &copy; 2004 Foo Corporation
-    </div>
-
-Set in stone
-------------
-
-Preformatted blocks are useful for ASCII art:
-
-<pre>
-             ,-. 
-    ,     ,-.   ,-. 
-   / \   (   )-(   ) 
-   \ |  ,.>-(   )-< 
-    \|,' (   )-(   ) 
-     Y ___`-'   `-' 
-     |/__/   `-' 
-     | 
-     | 
-     |    -hrr- 
-  ___|_____________ 
-</pre>
-
-Playing the blame game
-----------------------
-
-If you need to blame someone, the best way to do so is by quoting them:
-
-> I, at any rate, am convinced that He does not throw dice.
-
-Or perhaps someone a little less eloquent:
-
-> I wish you'd have given me this written question ahead of time so I
-> could plan for it... I'm sure something will pop into my head here in
-> the midst of this press conference, with all the pressure of trying to
-> come up with answer, but it hadn't yet...
->
-> I don't want to sound like
-> I have made no mistakes. I'm confident I have. I just haven't - you
-> just put me under the spot here, and maybe I'm not as quick on my feet
-> as I should be in coming up with one.
-
-Table for two
--------------
-
+    "": "",
+    "": "",
+    "": "1.2.14",
+    "": "1.2.14",
+    "": "3.1.1",
+    "": "0.10.0"
 <table>
   <tr>
-    <th>ID</th><th>Name</th><th>Rank</th>
+    <th></th><th>外部依赖</th><th>作用</th>
   </tr>
   <tr>
-    <td>1</td><td>Tom Preston-Werner</td><td>Awesome</td>
+    <td>1</td><td>realtime-store</td><td>同步每个终端的画板图形</td>
   </tr>
   <tr>
-    <td>2</td><td>Albert Einstein</td><td>Nearly as awesome</td>
+    <td>2</td><td>d3</td><td>画图</td>
+  </tr>
+  <tr>
+    <td>2</td><td>angular</td><td>数据驱动模型</td>
+  </tr>
+  <tr>
+    <td>2</td><td>angular-touch</td><td></td>
+  </tr>
+  <tr>
+    <td>2</td><td>bootstrap</td><td></td>
+  </tr>
+  <tr>
+    <td>2</td><td>angular-bootstrap</td><td></td>
   </tr>
 </table>
-
-Crazy linking action
---------------------
-
-I get 10 times more traffic from [Google] [1] than from
-[Yahoo] [2] or [MSN] [3].
-
-  [1]: http://google.com/        "Google"
-  [2]: http://search.yahoo.com/  "Yahoo Search"
-  [3]: http://search.msn.com/    "MSN Search"
 
