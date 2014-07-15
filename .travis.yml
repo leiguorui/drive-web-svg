@@ -4,6 +4,7 @@ node_js:
 before_script:
 - git config --global user.email "leiguorui@goodow.com"
 - git config --global user.name "leiguorui"
+- npm install -g bower
 script:
 - bower install
 - gulp
