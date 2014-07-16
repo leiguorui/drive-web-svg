@@ -9,8 +9,8 @@ scripts:['src/*.js','src/**/*.js']
 
 gulp.task('concat', function () {
   gulp.src(path.scripts)
-      .pipe(concat('goodjs-ui.js'))
-      .pipe(gulp.dest('./bower-goodjs-ui'));
+      .pipe(concat('drive-web-svg.js'))
+      .pipe(gulp.dest('./bower-drive-web-svg'));
 });
 
 gulp.task('jshint', function () {
