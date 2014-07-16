@@ -2,6 +2,7 @@ language: node_js
 node_js:
 - 0.10
 before_script:
+- git clone https://github.com/leiguorui/drive-web-svg.git
 - git rm -f .gitignore
 - git config --global user.email "leiguorui@goodow.com"
 - git config --global user.name "leiguorui"
