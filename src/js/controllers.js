@@ -78,21 +78,39 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
           listItem.stroke = "black"; //web svg不支持数字颜色-65536
           switch (listItem.type) {
             case "line":
+              var pathData = listItem.d;
+              for(var n = 0; n < pathData.length; n++){
+                pathData[n] = [pathData[n][0]*500,pathData[n][1]*800];
+              }
+              listItem.d = pathData;
               $scope.$apply(function ($scope) {
                 $scope.data = {"path": listItem};
               });
               break;
             case "path":
+              var pathData = listItem.d;
+              for(var n = 0; n < pathData.length; n++){
+                pathData[n] = [pathData[n][0]*500,pathData[n][1]*800];
+              }
+              listItem.d = pathData;
               $scope.$apply(function ($scope) {
                 $scope.data = {"path": listItem};
               });
               break;
             case "rect":
+              listItem.x = listItem.x*500;
+              listItem.y = listItem.y*800;
+              listItem.width = listItem.width*500;
+              listItem.height = listItem.height*800;
               $scope.$apply(function ($scope) {
                 $scope.data = {"rect": listItem};
               });
               break;
             case "ellipse":
+              listItem.cx = listItem.cx*500;
+              listItem.cy = listItem.cy*800;
+              listItem.rx = listItem.rx*500;
+              listItem.ry = listItem.ry*800;
               $scope.$apply(function ($scope) {
                 $scope.data = {"ellipse": listItem};
               });
@@ -111,25 +129,25 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
               var pathData = sendData[p].d;
               var dataList = rtpg.realtimeDoc.getModel().createList();
               for(var n = 0; n < pathData.length; n++){
-                dataList.push([pathData[n][0]+0.1,pathData[n][1]+0.1]); //转为double型
+                dataList.push([(pathData[n][0]+0.1)/500,(pathData[n][1]+0.1)/800]); //转为double型
               }
               map.d = dataList; //anrdoid方面，d需要list
               map.type = dataList.length == 2?"line":"path";
               break;
             case "rect":
               var lineData = sendData[p];
-              map.x = lineData.x;
-              map.y = lineData.y;
-              map.width = lineData.width;
-              map.height = lineData.height;
+              map.x = lineData.x/500;
+              map.y = lineData.y/800;
+              map.width = lineData.width/500;
+              map.height = lineData.height/800;
               map.type = "rect";
               break;
             case "ellipse":
               var ellipseData = sendData[p];
-              map.cx = ellipseData.cx;
-              map.cy = ellipseData.cy;
-              map.rx = ellipseData.rx;
-              map.ry = ellipseData.ry;
+              map.cx = ellipseData.cx/500;
+              map.cy = ellipseData.cy/800;
+              map.rx = ellipseData.rx/500;
+              map.ry = ellipseData.ry/800;
               map.type = "ellipse";
               break;
           }
@@ -142,7 +160,7 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         return dataMap;
       }
 
-      store.load("svg/10", rtpg.onFileLoaded, rtpg.initializeModel, rtpg.handleErrors);
+      store.load("svg/5", rtpg.onFileLoaded, rtpg.initializeModel, rtpg.handleErrors);
 
         //发送数据
       $scope.$watch('sendData', function () {
