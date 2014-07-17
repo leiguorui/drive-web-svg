@@ -76,6 +76,7 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         for (var i = 0, len = array.length; i < len; i++) {
           var listItem = array[i].toJson();
           listItem.stroke = "black"; //web svg不支持数字颜色-65536
+          listItem.fill = "none";
           switch (listItem.type) {
             case "line":
               var pathData = listItem.d;
