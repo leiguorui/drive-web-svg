@@ -173,4 +173,15 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
       $scope.clearSVG = function(){
         rtpg.realtimeDoc.getModel().getRoot().get('data').clear();
       }
+    }])
+    .controller("ButtonsCtrl",["$scope",function($scope){
+      $scope.singleModel = 1;
+
+      $scope.radioModel = 'Middle';
+
+      $scope.checkModel = {
+        left: false,
+        middle: true,
+        right: false
+      };
     }]);

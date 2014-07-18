@@ -3,18 +3,81 @@ angular.module('drive.web.svg', [
   'drive.web.svg.controllers',
   'drive.web.svg.directives'
 ]).run(['$templateCache', function ($templateCache) {
-  $templateCache.put('partials/canvasDirective.html', '<div class="nav" id="draw_menu" >' +
-      '<input type="radio" name="path" ng-model="shape" value="line"/>  zhi' +
-      '<input type="radio" name="path" ng-model="shape" value="path2"/> jian' +
-      '<input type="radio" name="path" ng-model="shape" value="path3"/> qu' +
-      '<input type="radio" name="path" ng-model="shape" value="path4"/>  zhe' +
-      '<input type="radio" name="path" ng-model="shape" value="path5"/> hu' +
-      '<input type="radio" name="path" ng-model="shape" value="path"/> ziyou' +
-      '<input type="radio"  ng-model="shape" value="rect"/>  juxing' +
-      '<input type="radio"  ng-model="shape" value="ellipse"/> tuoyuan' +
-      '<input type="text" name="basic" ng-model="stroke" id="border_color"/>RGB or name ：边框颜色' +
-      '<input type="text" name="basic" ng-model="fill" id="fill_color"/>RGB or name :填充颜色' +
-      '<input type="text" name="basic" ng-model="stroke_width" id="border_width"/>Number' +
-      '<button ng-click="clearSVG()">清空</button>' +
-      '</div><svg id="mysvg"></svg>');
+  $templateCache.put('partials/canvasDirective.html',
+      '<div id="page-content-wrapper">' +
+        <!-- Keep all page content within the page-content inset div! -->
+        '<div class="page-content inset">' +
+          '<div class="row">' +
+            '<div class="col-md-12">' +
+              '<div class="btn-toolbar" role="toolbar">' +
+                '<div class="btn-group">' +
+                  '<button type="button" class="btn btn-default">' +
+                    '<span class="glyphicon glyphicon-align-justify"></span> 直线' +
+                  '</button>' +
+                  '<button type="button" class="btn btn-default">' +
+                    '<span class="glyphicon glyphicon-paperclip"></span> 曲线' +
+                  '</button>' +
+                  '<button type="button" class="btn btn-default">' +
+                    '<span class="glyphicon glyphicon-adjust"></span> 椭圆' +
+                  '</button>' +
+                  '<button type="button" class="btn btn-default">' +
+                    '<span class="glyphicon glyphicon-th-large"></span> 矩形' +
+                  '</button>' +
+                '</div>' +
+                '<div class="btn-group">' +
+                  '<button type="button" class="btn btn-default">' +
+                  '<span class="glyphicon glyphicon-pencil"></span> 画笔' +
+                  '</button>' +
+                  '<button type="button" class="btn btn-default">' +
+                  '<span class="glyphicon glyphicon-book"></span> 橡皮' +
+                  '</button>' +
+                  '<button type="button" class="btn btn-default">' +
+                  '<span class="glyphicon glyphicon-font"></span> 文字' +
+                  '</button>' +
+                '</div>' +
+                '<div class="btn-group">' +
+                  '<button type="button" class="btn btn-default">' +
+                    '<span class="glyphicon glyphicon-circle-arrow-left"></span> 撤销' +
+                  '</button>' +
+                  '<button type="button" class="btn btn-default">' +
+                    '<span class="glyphicon glyphicon-circle-arrow-right"></span> 重做' +
+                  '</button>' +
+                  '<button type="button" class="btn btn-default">' +
+                    '<span class="glyphicon glyphicon-trash"></span> 清空' +
+                  '</button>' +
+                  '<button type="button" class="btn btn-default">' +
+                    '<span class="glyphicon glyphicon-th"></span> 取色' +
+                  '</button>' +
+                '</div>' +
+                '<div class="btn-group">' +
+                  '<button type="button" class="btn btn-default">' +
+                    '<span class="glyphicon glyphicon-share-alt"></span> 邀请' +
+                  '</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="col-md-8">' +
+              '<p class="well">' +
+                '<svg id="mysvg"></svg>' +
+              '</p>' +
+            '</div>' +
+            '<div class="col-md-4">' +
+              '<p class="well">输出信息.</p>' +
+            '</div>' +
+            '<div class="col-md-4">' +
+              '<p class="well">But the full-width layout means that you wont be using containers.</p>' +
+            '</div>' +
+            '<div class="col-md-4">' +
+              '<p class="well">Three Column Example</p>' +
+            '</div>' +
+            '<div class="col-md-4">' +
+              '<p class="well">Three Column Example</p>' +
+            '</div>' +
+            '<div class="col-md-4">' +
+              '<p class="well">You get the idea! Do whatever you want in the page content area!</p>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>');
 }]);
+

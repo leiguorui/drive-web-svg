@@ -3,33 +3,39 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>drive-web-svg</title>
-    <style type="text/css">
-        #mysvg {
-            width: 500px;
-            height: 800px;
-            border: 1px solid black;
-            cursor: default;
-        }
-        input[type='radio'] {
-            display: inline;
-        }
-        rect, path, g, ellipse {
-            -webkit-transform-origin: initial;
-            -moz-transform-origin: initial;
-            -o-transform-origin: initial;
-            transform-origin: initial;
-        }
-    </style>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="bower-drive-web-svg/css/simple-sidebar.css" />
 </head>
 <body>
-<div ng-controller="SVGController">
+
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand"><a href="#">协同画板</a>
+            </li>
+            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> 新建画板</a>
+            </li>
+            <li><a href="#"><span class="glyphicon glyphicon-leaf"></span> 协同作画</a>
+            </li>
+            <li><a href="#"><span class="glyphicon glyphicon-user"></span> 我的画板</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Page content -->
     <goodowcanvas></goodowcanvas>
+
 </div>
+
 <script type="text/javascript" src="bower_components/bower-sockjs-client/sockjs.min.js"></script>
 <script type="text/javascript" src="bower_components/realtime-store/realtime.store.js"></script>
 <script type="text/javascript" src="bower_components/angular/angular.js"></script>
 <script type="text/javascript" src="bower_components/angular-touch/angular-touch.js"></script>
 <script type="text/javascript" src="bower_components/d3/d3.js"></script>
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="bower-drive-web-svg/drive-web-svg.js"></script>
 </body>
 </html>
