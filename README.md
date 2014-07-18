@@ -1,6 +1,6 @@
 
 
-基于realtime-store的画板
+基于realtime-store的协同画板 [![Build Status](https://travis-ci.org/leiguorui/drive-web-svg.svg?branch=master)](https://travis-ci.org/leiguorui/drive-web-svg)
 ================================
 
 *先上 [demo](http://leiguorui.github.io/drive-web-svg/) 演示效果.*
