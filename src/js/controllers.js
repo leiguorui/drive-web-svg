@@ -163,25 +163,60 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
 
       store.load("svg/5", rtpg.onFileLoaded, rtpg.initializeModel, rtpg.handleErrors);
 
-        //发送数据
+      //发送数据
       $scope.$watch('sendData', function () {
         if ($scope.sendData) {
           rtpg.list.field.push(rtpg.list.converteToMap($scope.sendData));
         }
       });
+
       //清空数据
       $scope.clearSVG = function(){
         rtpg.realtimeDoc.getModel().getRoot().get('data').clear();
       }
+
+      //设置图形
+      $scope.shapeSelecter = function(shape){
+        $scope.shape = shape;
+      }
+
     }])
-    .controller("ButtonsCtrl",["$scope",function($scope){
-      $scope.singleModel = 1;
+    .controller("ModalDemoCtrl",["$scope","$modal","$log",function($scope, $modal, $log){
+      $scope.items = ['item1', 'item2', 'item3'];
 
-      $scope.radioModel = 'Middle';
+      $scope.open = function (size) {
 
-      $scope.checkModel = {
-        left: false,
-        middle: true,
-        right: false
+        var modalInstance = $modal.open({
+          templateUrl: 'myModalContent.html',
+          controller: ModalInstanceCtrl,
+          size: size,
+          resolve: {
+            items: function () {
+              return $scope.items;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+          $scope.selected = selectedItem;
+        }, function () {
+          $log.info('Modal dismissed at: ' + new Date());
+        });
+      };
+
+      var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
+
+        $scope.items = items;
+        $scope.selected = {
+          item: $scope.items[0]
+        };
+
+        $scope.ok = function () {
+          $modalInstance.close($scope.selected.item);
+        };
+
+        $scope.cancel = function () {
+          $modalInstance.dismiss('cancel');
+        };
       };
     }]);

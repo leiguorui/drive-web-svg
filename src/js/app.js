@@ -1,4 +1,6 @@
 angular.module('drive.web.svg', [
+  'ui.bootstrap',
+  'colorpicker.module',
   'drive.web.svg.services',
   'drive.web.svg.controllers',
   'drive.web.svg.directives'
@@ -11,16 +13,16 @@ angular.module('drive.web.svg', [
             '<div class="col-md-12">' +
               '<div class="btn-toolbar" role="toolbar">' +
                 '<div class="btn-group">' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" ng-click="shapeSelecter(\'line\')" class="btn btn-default">' +
                     '<span class="glyphicon glyphicon-align-justify"></span> 直线' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" ng-click="shapeSelecter(\'path\')" class="btn btn-default">' +
                     '<span class="glyphicon glyphicon-paperclip"></span> 曲线' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" ng-click="shapeSelecter(\'ellipse\')" class="btn btn-default">' +
                     '<span class="glyphicon glyphicon-adjust"></span> 椭圆' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" ng-click="shapeSelecter(\'rect\')" class="btn btn-default">' +
                     '<span class="glyphicon glyphicon-th-large"></span> 矩形' +
                   '</button>' +
                 '</div>' +
@@ -42,10 +44,10 @@ angular.module('drive.web.svg', [
                   '<button type="button" class="btn btn-default">' +
                     '<span class="glyphicon glyphicon-circle-arrow-right"></span> 重做' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-click="clearSVG()">' +
                     '<span class="glyphicon glyphicon-trash"></span> 清空' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" colorpicker colorpicker-position="bottom" ng-model="stroke">' +
                     '<span class="glyphicon glyphicon-th"></span> 取色' +
                   '</button>' +
                 '</div>' +
