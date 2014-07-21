@@ -1,4 +1,6 @@
 angular.module('drive.web.svg', [
+  'ui.bootstrap',
+  'colorpicker.module',
   'drive.web.svg.services',
   'drive.web.svg.controllers',
   'drive.web.svg.directives'
@@ -11,16 +13,16 @@ angular.module('drive.web.svg', [
             '<div class="col-md-12">' +
               '<div class="btn-toolbar" role="toolbar">' +
                 '<div class="btn-group">' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" ng-click="shapeSelecter(\'line\')" class="btn btn-default">' +
                     '<span class="glyphicon glyphicon-align-justify"></span> 直线' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" ng-click="shapeSelecter(\'path\')" class="btn btn-default">' +
                     '<span class="glyphicon glyphicon-paperclip"></span> 曲线' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" ng-click="shapeSelecter(\'ellipse\')" class="btn btn-default">' +
                     '<span class="glyphicon glyphicon-adjust"></span> 椭圆' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" ng-click="shapeSelecter(\'rect\')" class="btn btn-default">' +
                     '<span class="glyphicon glyphicon-th-large"></span> 矩形' +
                   '</button>' +
                 '</div>' +
@@ -42,10 +44,10 @@ angular.module('drive.web.svg', [
                   '<button type="button" class="btn btn-default">' +
                     '<span class="glyphicon glyphicon-circle-arrow-right"></span> 重做' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-click="clearSVG()">' +
                     '<span class="glyphicon glyphicon-trash"></span> 清空' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" colorpicker colorpicker-position="bottom" ng-model="stroke">' +
                     '<span class="glyphicon glyphicon-th"></span> 取色' +
                   '</button>' +
                 '</div>' +
@@ -247,26 +249,61 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
 
       store.load("svg/5", rtpg.onFileLoaded, rtpg.initializeModel, rtpg.handleErrors);
 
-        //发送数据
+      //发送数据
       $scope.$watch('sendData', function () {
         if ($scope.sendData) {
           rtpg.list.field.push(rtpg.list.converteToMap($scope.sendData));
         }
       });
+
       //清空数据
       $scope.clearSVG = function(){
         rtpg.realtimeDoc.getModel().getRoot().get('data').clear();
       }
+
+      //设置图形
+      $scope.shapeSelecter = function(shape){
+        $scope.shape = shape;
+      }
+
     }])
-    .controller("ButtonsCtrl",["$scope",function($scope){
-      $scope.singleModel = 1;
+    .controller("ModalDemoCtrl",["$scope","$modal","$log",function($scope, $modal, $log){
+      $scope.items = ['item1', 'item2', 'item3'];
 
-      $scope.radioModel = 'Middle';
+      $scope.open = function (size) {
 
-      $scope.checkModel = {
-        left: false,
-        middle: true,
-        right: false
+        var modalInstance = $modal.open({
+          templateUrl: 'myModalContent.html',
+          controller: ModalInstanceCtrl,
+          size: size,
+          resolve: {
+            items: function () {
+              return $scope.items;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+          $scope.selected = selectedItem;
+        }, function () {
+          $log.info('Modal dismissed at: ' + new Date());
+        });
+      };
+
+      var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
+
+        $scope.items = items;
+        $scope.selected = {
+          item: $scope.items[0]
+        };
+
+        $scope.ok = function () {
+          $modalInstance.close($scope.selected.item);
+        };
+
+        $scope.cancel = function () {
+          $modalInstance.dismiss('cancel');
+        };
       };
     }]);
 

@@ -5,21 +5,39 @@
     <title>drive-web-svg</title>
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="bower-drive-web-svg/css/simple-sidebar.css" />
+    <link rel="stylesheet" href="bower_components/angular-bootstrap-colorpicker/css/colorpicker.css">
 </head>
 <body>
 
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div id="sidebar-wrapper">
+    <div id="sidebar-wrapper"  ng-controller="ModalDemoCtrl">
+        <script type="text/ng-template" id="myModalContent.html">
+            <div class="modal-header">
+                <h3 class="modal-title">I'm a modal!</h3>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li ng-repeat="item in items">
+                        <a ng-click="selected.item = item">{{ item }}</a>
+                    </li>
+                </ul>
+                Selected: <b>{{ selected.item }}</b>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            </div>
+        </script>
         <ul class="sidebar-nav">
             <li class="sidebar-brand"><a href="#">协同画板</a>
             </li>
-            <li><a href="#"><span class="glyphicon glyphicon-plus"></span> 新建画板</a>
+            <li><a href="#" ng-click="open()"><span class="glyphicon glyphicon-plus"></span> 新建画板</a>
             </li>
-            <li><a href="#"><span class="glyphicon glyphicon-leaf"></span> 协同作画</a>
+            <li><a href="#" ng-click="open('lg')"><span class="glyphicon glyphicon-leaf"></span> 协同作画</a>
             </li>
-            <li><a href="#"><span class="glyphicon glyphicon-user"></span> 我的画板</a>
+            <li><a href="#" ng-click="open('sm')"><span class="glyphicon glyphicon-user"></span> 我的画板</a>
             </li>
         </ul>
     </div>
@@ -33,9 +51,11 @@
 <script type="text/javascript" src="bower_components/realtime-store/realtime.store.js"></script>
 <script type="text/javascript" src="bower_components/angular/angular.js"></script>
 <script type="text/javascript" src="bower_components/angular-touch/angular-touch.js"></script>
+<script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script type="text/javascript" src="bower_components/d3/d3.js"></script>
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="bower-drive-web-svg/drive-web-svg.js"></script>
+<script type="text/javascript" src="bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
 </body>
 </html>
