@@ -27,10 +27,10 @@ angular.module('drive.web.svg', [
                   '</button>' +
                 '</div>' +
                 '<div class="btn-group">' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'path\')">' +
                   '<span class="glyphicon glyphicon-pencil"></span> 画笔' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'eraser\')">' +
                   '<span class="glyphicon glyphicon-book"></span> 橡皮' +
                   '</button>' +
                   '<button type="button" class="btn btn-default">' +
@@ -38,16 +38,16 @@ angular.module('drive.web.svg', [
                   '</button>' +
                 '</div>' +
                 '<div class="btn-group">' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-disabled="undoButtonStatus" ng-click="doAction(\'undo\')">' +
                     '<span class="glyphicon glyphicon-circle-arrow-left"></span> 撤销' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-disabled="redoButtonStatus" ng-click="doAction(\'redo\')">' +
                     '<span class="glyphicon glyphicon-circle-arrow-right"></span> 重做' +
                   '</button>' +
                   '<button type="button" class="btn btn-default" ng-click="clearSVG()">' +
                     '<span class="glyphicon glyphicon-trash"></span> 清空' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default" colorpicker colorpicker-position="bottom" ng-model="stroke">' +
+                  '<button type="button" class="btn btn-default" colorpicker colorpicker-position="bottom" style="background-color: {{stroke}};" ng-model="stroke">' +
                     '<span class="glyphicon glyphicon-th"></span> 取色' +
                   '</button>' +
                 '</div>' +
@@ -91,6 +91,8 @@ angular.module('drive.web.svg', [
 angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
     .controller('SVGController', ['$scope', '$window','graphService', 'realtimeService', 'goodowConstant', '$log',
       function ($scope, $window,graphService, realtimeService, goodowConstant, $log) {
+      $scope.undoButtonStatus = "true";
+      $scope.redoButtonStatus = "true";
       var store = realtimeService();
       var rtpg = rtpg || {};
       rtpg.realtimeDoc = null;
@@ -113,6 +115,12 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         rtpg.list.loadField();
         rtpg.list.connectRealtime(doc);
         rtpg.list.connectUi();
+
+        // 重做&撤销 按钮状态
+        doc.getModel().onUndoRedoStateChanged(function(e) {
+          $scope.undoButtonStatus = !e.canUndo();
+          $scope.redoButtonStatus = !e.canRedo();
+        });
       };
 
       rtpg.handleErrors = function (e) {
@@ -161,7 +169,7 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         var array = rtpg.list.field.asArray();
         for (var i = 0, len = array.length; i < len; i++) {
           var listItem = array[i].toJson();
-          listItem.stroke = "black"; //web svg不支持数字颜色-65536
+//          listItem.stroke = "black"; //web svg不支持数字颜色-65536
           listItem.fill = "none";
           switch (listItem.type) {
             case "line":
@@ -209,8 +217,9 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
       //转化要发送的数据
       rtpg.list.converteToMap = function(sendData){
         //数据放在map中，否则数据转换错误
-        var map = ({"fill": 0, "stroke": -65536, "stroke_width": 3, "rotate": 0});
+        var map = ({"fill": 0, "stroke_width": 3, "rotate": 0});
         for (var p in sendData) {
+          map.stroke = sendData[p].stroke;
           switch (p) {
             case "path":
               var pathData = sendData[p].d;
@@ -263,9 +272,26 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
 
       //设置图形
       $scope.shapeSelecter = function(shape){
-        $scope.shape = shape;
+        if("eraser" == shape){ //TODO 这里应该再写个函数，把画笔的图形跟橡皮擦分开
+          $scope.shape = "path";
+          $scope.stroke_width = "10";
+          $scope.stroke = "white";
+        }else{
+          $scope.shape = shape;
+          $scope.stroke_width = null;
+          $scope.stroke = null;
+        }
       }
 
+      // undo & redo
+      $scope.doAction = function(doAction){
+        var model = rtpg.realtimeDoc.getModel();
+        if(doAction == "undo"){
+          model.undo();
+        }else{
+          model.redo();
+        }
+      }
     }])
     .controller("ModalDemoCtrl",["$scope","$modal","$log",function($scope, $modal, $log){
       $scope.items = ['item1', 'item2', 'item3'];
@@ -471,36 +497,38 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
 
       d3.select(self_).on('mouseup', function () {
         var self_ = this;
+        var fill = scope.fill == undefined ? 'none' : scope.fill; //填充默认为透明
+        var stroke = scope.stroke == undefined ? 'black' : scope.stroke; //边框默认为黑色
         if (d3.event.which == 1) {
           d3.select(self_).attr('style', 'cursor:default');
           configuration.canDraw = false;
           configuration.hasDrawFinish = true;
           var sendData = {};
           if (configuration.type == 'rect') {
-            rect.attr('fill', scope.fill)
+            rect.attr('fill', fill)
                 .attr('stroke-width', scope.stroke_width)
-                .attr('stroke', scope.stroke)
+                .attr('stroke', stroke)
                 .attr('stroke-dasharray', '');
             sendData.rect = {};
             sendData.rect['x'] = configuration.startX;
             sendData.rect['y'] = configuration.startY;
             sendData.rect['width'] = configuration.width;
             sendData.rect['height'] = configuration.height;
-            sendData.rect['fill'] = scope.fill;
-            sendData.rect['stroke'] = scope.stroke;
+            sendData.rect['fill'] = fill;
+            sendData.rect['stroke'] = stroke;
             sendData.rect['stroke-width'] = scope.stroke_width;
           } else if (configuration.type == 'ellipse') {
-            ellipse.attr('fill', scope.fill)
+            ellipse.attr('fill', fill)
                 .attr('stroke-width', scope.stroke_width)
-                .attr('stroke', scope.stroke)
+                .attr('stroke', stroke)
                 .attr('stroke-dasharray', '');
             sendData.ellipse = {};
             sendData.ellipse['cx'] = configuration.startX;
             sendData.ellipse['cy'] = configuration.startY;
             sendData.ellipse['rx'] = configuration.rx;
             sendData.ellipse['ry'] = configuration.ry;
-            sendData.ellipse['fill'] = scope.fill;
-            sendData.ellipse['stroke'] = scope.stroke;
+            sendData.ellipse['fill'] = fill;
+            sendData.ellipse['stroke'] = stroke;
             sendData.ellipse['stroke-width'] = scope.stroke_width;
           } else if (configuration.type == 'path') {
             console.log(JSON.stringify(configuration.d));
@@ -586,7 +614,7 @@ var serviceModule;
       .factory('goodowConstant', function () {
         return {
           SVG_SID: 'someaddress.s',
-          SERVER: 'http://realtime.goodow.com:1986/channel'
+          SERVER: 'http://lgr.goodow.com:1986/channel'
         }
       })
       .factory('realtimeService', ['goodowConstant', function (goodowConstant) {
