@@ -12,7 +12,7 @@ var serviceModule;
       .factory('goodowConstant', function () {
         return {
           SVG_SID: 'someaddress.s',
-          SERVER: 'http://realtime.goodow.com:1986/channel'
+          SERVER: 'http://lgr.goodow.com:1986/channel'
         }
       })
       .factory('realtimeService', ['goodowConstant', function (goodowConstant) {

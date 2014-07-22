@@ -27,10 +27,10 @@ angular.module('drive.web.svg', [
                   '</button>' +
                 '</div>' +
                 '<div class="btn-group">' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'path\')">' +
                   '<span class="glyphicon glyphicon-pencil"></span> 画笔' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'eraser\')">' +
                   '<span class="glyphicon glyphicon-book"></span> 橡皮' +
                   '</button>' +
                   '<button type="button" class="btn btn-default">' +
@@ -38,16 +38,16 @@ angular.module('drive.web.svg', [
                   '</button>' +
                 '</div>' +
                 '<div class="btn-group">' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-disabled="undoButtonStatus" ng-click="doAction(\'undo\')">' +
                     '<span class="glyphicon glyphicon-circle-arrow-left"></span> 撤销' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-disabled="redoButtonStatus" ng-click="doAction(\'redo\')">' +
                     '<span class="glyphicon glyphicon-circle-arrow-right"></span> 重做' +
                   '</button>' +
                   '<button type="button" class="btn btn-default" ng-click="clearSVG()">' +
                     '<span class="glyphicon glyphicon-trash"></span> 清空' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default" colorpicker colorpicker-position="bottom" ng-model="stroke">' +
+                  '<button type="button" class="btn btn-default" colorpicker colorpicker-position="bottom" style="background-color: {{stroke}};" ng-model="stroke">' +
                     '<span class="glyphicon glyphicon-th"></span> 取色' +
                   '</button>' +
                 '</div>' +

@@ -5,6 +5,8 @@
 angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
     .controller('SVGController', ['$scope', '$window','graphService', 'realtimeService', 'goodowConstant', '$log',
       function ($scope, $window,graphService, realtimeService, goodowConstant, $log) {
+      $scope.undoButtonStatus = "true";
+      $scope.redoButtonStatus = "true";
       var store = realtimeService();
       var rtpg = rtpg || {};
       rtpg.realtimeDoc = null;
@@ -27,6 +29,12 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         rtpg.list.loadField();
         rtpg.list.connectRealtime(doc);
         rtpg.list.connectUi();
+
+        // 重做&撤销 按钮状态
+        doc.getModel().onUndoRedoStateChanged(function(e) {
+          $scope.undoButtonStatus = !e.canUndo();
+          $scope.redoButtonStatus = !e.canRedo();
+        });
       };
 
       rtpg.handleErrors = function (e) {
@@ -75,7 +83,7 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         var array = rtpg.list.field.asArray();
         for (var i = 0, len = array.length; i < len; i++) {
           var listItem = array[i].toJson();
-          listItem.stroke = "black"; //web svg不支持数字颜色-65536
+//          listItem.stroke = "black"; //web svg不支持数字颜色-65536
           listItem.fill = "none";
           switch (listItem.type) {
             case "line":
@@ -123,8 +131,9 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
       //转化要发送的数据
       rtpg.list.converteToMap = function(sendData){
         //数据放在map中，否则数据转换错误
-        var map = ({"fill": 0, "stroke": -65536, "stroke_width": 3, "rotate": 0});
+        var map = ({"fill": 0, "stroke_width": 3, "rotate": 0});
         for (var p in sendData) {
+          map.stroke = sendData[p].stroke;
           switch (p) {
             case "path":
               var pathData = sendData[p].d;
@@ -177,9 +186,26 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
 
       //设置图形
       $scope.shapeSelecter = function(shape){
-        $scope.shape = shape;
+        if("eraser" == shape){ //TODO 这里应该再写个函数，把画笔的图形跟橡皮擦分开
+          $scope.shape = "path";
+          $scope.stroke_width = "10";
+          $scope.stroke = "white";
+        }else{
+          $scope.shape = shape;
+          $scope.stroke_width = null;
+          $scope.stroke = null;
+        }
       }
 
+      // undo & redo
+      $scope.doAction = function(doAction){
+        var model = rtpg.realtimeDoc.getModel();
+        if(doAction == "undo"){
+          model.undo();
+        }else{
+          model.redo();
+        }
+      }
     }])
     .controller("ModalDemoCtrl",["$scope","$modal","$log",function($scope, $modal, $log){
       $scope.items = ['item1', 'item2', 'item3'];

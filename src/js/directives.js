@@ -162,36 +162,38 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
 
       d3.select(self_).on('mouseup', function () {
         var self_ = this;
+        var fill = scope.fill == undefined ? 'none' : scope.fill; //填充默认为透明
+        var stroke = scope.stroke == undefined ? 'black' : scope.stroke; //边框默认为黑色
         if (d3.event.which == 1) {
           d3.select(self_).attr('style', 'cursor:default');
           configuration.canDraw = false;
           configuration.hasDrawFinish = true;
           var sendData = {};
           if (configuration.type == 'rect') {
-            rect.attr('fill', scope.fill)
+            rect.attr('fill', fill)
                 .attr('stroke-width', scope.stroke_width)
-                .attr('stroke', scope.stroke)
+                .attr('stroke', stroke)
                 .attr('stroke-dasharray', '');
             sendData.rect = {};
             sendData.rect['x'] = configuration.startX;
             sendData.rect['y'] = configuration.startY;
             sendData.rect['width'] = configuration.width;
             sendData.rect['height'] = configuration.height;
-            sendData.rect['fill'] = scope.fill;
-            sendData.rect['stroke'] = scope.stroke;
+            sendData.rect['fill'] = fill;
+            sendData.rect['stroke'] = stroke;
             sendData.rect['stroke-width'] = scope.stroke_width;
           } else if (configuration.type == 'ellipse') {
-            ellipse.attr('fill', scope.fill)
+            ellipse.attr('fill', fill)
                 .attr('stroke-width', scope.stroke_width)
-                .attr('stroke', scope.stroke)
+                .attr('stroke', stroke)
                 .attr('stroke-dasharray', '');
             sendData.ellipse = {};
             sendData.ellipse['cx'] = configuration.startX;
             sendData.ellipse['cy'] = configuration.startY;
             sendData.ellipse['rx'] = configuration.rx;
             sendData.ellipse['ry'] = configuration.ry;
-            sendData.ellipse['fill'] = scope.fill;
-            sendData.ellipse['stroke'] = scope.stroke;
+            sendData.ellipse['fill'] = fill;
+            sendData.ellipse['stroke'] = stroke;
             sendData.ellipse['stroke-width'] = scope.stroke_width;
           } else if (configuration.type == 'path') {
             console.log(JSON.stringify(configuration.d));
