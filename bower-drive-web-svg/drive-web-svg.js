@@ -33,7 +33,7 @@ angular.module('drive.web.svg', [
                   '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'eraser\')">' +
                   '<span class="glyphicon glyphicon-book"></span> 橡皮' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'text\')">' +
                   '<span class="glyphicon glyphicon-font"></span> 文字' +
                   '</button>' +
                 '</div>' +
@@ -170,7 +170,6 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         for (var i = 0, len = array.length; i < len; i++) {
           var listItem = array[i].toJson();
 //          listItem.stroke = "black"; //web svg不支持数字颜色-65536
-          listItem.fill = "none";
           switch (listItem.type) {
             case "line":
               var pathData = listItem.d;
@@ -193,6 +192,7 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
               });
               break;
             case "rect":
+              listItem.fill = "none";
               listItem.x = listItem.x*500;
               listItem.y = listItem.y*800;
               listItem.width = listItem.width*500;
@@ -202,12 +202,18 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
               });
               break;
             case "ellipse":
+              listItem.fill = "none";
               listItem.cx = listItem.cx*500;
               listItem.cy = listItem.cy*800;
               listItem.rx = listItem.rx*500;
               listItem.ry = listItem.ry*800;
               $scope.$apply(function ($scope) {
                 $scope.data = {"ellipse": listItem};
+              });
+              break;
+            case "text":
+              $scope.$apply(function ($scope) {
+                $scope.data = {"text": listItem};
               });
               break;
           }
@@ -245,6 +251,14 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
               map.rx = ellipseData.rx/500;
               map.ry = ellipseData.ry/800;
               map.type = "ellipse";
+              break;
+            case "text":
+              var textData = sendData[p];
+              map.x = textData.x;
+              map.y = textData.y;
+              map.text = textData.text;
+              map.fill = textData.fill;
+              map.type = "text";
               break;
           }
         }
@@ -443,15 +457,36 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
           configuration = angular.extend({}, defaultConfig);
           configuration.d = [];
         }
+
+        d3.select(self_).on('mousemove', function () {
+          if (!configuration.canDraw)
+            return;
+          d3.select(this).attr('style', 'cursor:crosshair');
+          configuration.d = [configuration.d[0]];
+          configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
+          line.attr('d', lineFunction(configuration.d));
+        });
+      }else if(scope.shape == 'text') {
+        var svgContainer = d3.select('#mysvg').append('g');
+        var text = svgContainer.append("text");
+        //Add SVG Text Element Attributes
+        var textLabels = text
+                         .attr("x", d3.event.offsetX)
+                         .attr("y", d3.event.offsetY)
+                         .text( "文字")
+                         .attr("fill", "red");
+        var sendData = {};
+        sendData.text = {};
+        sendData.text['x'] = d3.event.offsetX;
+        sendData.text['y'] = d3.event.offsetY;
+        sendData.text['text'] = "文字";
+        sendData.text['fill'] = "red";
+
+        scope.$apply(function (scope) {
+          scope.sendData = sendData;
+          console.log(JSON.stringify(sendData));
+        });
       }
-      d3.select(self_).on('mousemove', function () {
-        if (!configuration.canDraw)
-          return;
-        d3.select(this).attr('style', 'cursor:crosshair');
-        configuration.d = [configuration.d[0]];
-        configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
-        line.attr('d', lineFunction(configuration.d));
-      });
     });
 
     d3.select(svgElement).on('mousedown', function () {
@@ -701,10 +736,24 @@ var serviceModule;
             goodowUtil.transform(path, 'rotate(' + config.transform.rotate + 'deg)');
           }
         }
+
+        var textGenerator = function (config, svgElement) {
+          var text = svgElement.append('g').append('text');
+          var textLabels = text
+              .attr("x", config.x)
+              .attr("y", config.y)
+              .text( config.text)
+              .attr("fill", config.fill);
+
+          if (config.transform) {
+            goodowUtil.transform(path, 'rotate(' + config.transform.rotate + 'deg)');
+          }
+        }
         var factoryMap = {
           'ellipse': ellipseGenerator,
           'path': pathGenerator,
-          'rect': rectGenerator
+          'rect': rectGenerator,
+          'text': textGenerator
           //...
         }
 
