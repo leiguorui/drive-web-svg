@@ -33,7 +33,7 @@ angular.module('drive.web.svg', [
                   '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'eraser\')">' +
                   '<span class="glyphicon glyphicon-book"></span> 橡皮' +
                   '</button>' +
-                  '<button type="button" class="btn btn-default">' +
+                  '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'text\')">' +
                   '<span class="glyphicon glyphicon-font"></span> 文字' +
                   '</button>' +
                 '</div>' +

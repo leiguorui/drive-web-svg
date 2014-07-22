@@ -108,15 +108,36 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
           configuration = angular.extend({}, defaultConfig);
           configuration.d = [];
         }
+
+        d3.select(self_).on('mousemove', function () {
+          if (!configuration.canDraw)
+            return;
+          d3.select(this).attr('style', 'cursor:crosshair');
+          configuration.d = [configuration.d[0]];
+          configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
+          line.attr('d', lineFunction(configuration.d));
+        });
+      }else if(scope.shape == 'text') {
+        var svgContainer = d3.select('#mysvg').append('g');
+        var text = svgContainer.append("text");
+        //Add SVG Text Element Attributes
+        var textLabels = text
+                         .attr("x", d3.event.offsetX)
+                         .attr("y", d3.event.offsetY)
+                         .text( "文字")
+                         .attr("fill", "red");
+        var sendData = {};
+        sendData.text = {};
+        sendData.text['x'] = d3.event.offsetX;
+        sendData.text['y'] = d3.event.offsetY;
+        sendData.text['text'] = "文字";
+        sendData.text['fill'] = "red";
+
+        scope.$apply(function (scope) {
+          scope.sendData = sendData;
+          console.log(JSON.stringify(sendData));
+        });
       }
-      d3.select(self_).on('mousemove', function () {
-        if (!configuration.canDraw)
-          return;
-        d3.select(this).attr('style', 'cursor:crosshair');
-        configuration.d = [configuration.d[0]];
-        configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
-        line.attr('d', lineFunction(configuration.d));
-      });
     });
 
     d3.select(svgElement).on('mousedown', function () {

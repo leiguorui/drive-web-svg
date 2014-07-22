@@ -84,7 +84,6 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         for (var i = 0, len = array.length; i < len; i++) {
           var listItem = array[i].toJson();
 //          listItem.stroke = "black"; //web svg不支持数字颜色-65536
-          listItem.fill = "none";
           switch (listItem.type) {
             case "line":
               var pathData = listItem.d;
@@ -107,6 +106,7 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
               });
               break;
             case "rect":
+              listItem.fill = "none";
               listItem.x = listItem.x*500;
               listItem.y = listItem.y*800;
               listItem.width = listItem.width*500;
@@ -116,12 +116,18 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
               });
               break;
             case "ellipse":
+              listItem.fill = "none";
               listItem.cx = listItem.cx*500;
               listItem.cy = listItem.cy*800;
               listItem.rx = listItem.rx*500;
               listItem.ry = listItem.ry*800;
               $scope.$apply(function ($scope) {
                 $scope.data = {"ellipse": listItem};
+              });
+              break;
+            case "text":
+              $scope.$apply(function ($scope) {
+                $scope.data = {"text": listItem};
               });
               break;
           }
@@ -159,6 +165,14 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
               map.rx = ellipseData.rx/500;
               map.ry = ellipseData.ry/800;
               map.type = "ellipse";
+              break;
+            case "text":
+              var textData = sendData[p];
+              map.x = textData.x;
+              map.y = textData.y;
+              map.text = textData.text;
+              map.fill = textData.fill;
+              map.type = "text";
               break;
           }
         }

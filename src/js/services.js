@@ -99,10 +99,24 @@ var serviceModule;
             goodowUtil.transform(path, 'rotate(' + config.transform.rotate + 'deg)');
           }
         }
+
+        var textGenerator = function (config, svgElement) {
+          var text = svgElement.append('g').append('text');
+          var textLabels = text
+              .attr("x", config.x)
+              .attr("y", config.y)
+              .text( config.text)
+              .attr("fill", config.fill);
+
+          if (config.transform) {
+            goodowUtil.transform(path, 'rotate(' + config.transform.rotate + 'deg)');
+          }
+        }
         var factoryMap = {
           'ellipse': ellipseGenerator,
           'path': pathGenerator,
-          'rect': rectGenerator
+          'rect': rectGenerator,
+          'text': textGenerator
           //...
         }
 
