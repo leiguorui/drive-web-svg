@@ -51,11 +51,6 @@ angular.module('drive.web.svg', [
                     '<span class="glyphicon glyphicon-th"></span> 取色' +
                   '</button>' +
                 '</div>' +
-                '<div class="btn-group">' +
-                  '<button type="button" class="btn btn-default">' +
-                    '<span class="glyphicon glyphicon-share-alt"></span> 邀请' +
-                  '</button>' +
-                '</div>' +
               '</div>' +
             '</div>' +
             '<div class="col-md-8">' +
@@ -64,19 +59,10 @@ angular.module('drive.web.svg', [
               '</p>' +
             '</div>' +
             '<div class="col-md-4">' +
-              '<p class="well">输出信息.</p>' +
+              '<p class="well">画板编号：{{goodowConstant.boardId}}.</p>' +
             '</div>' +
             '<div class="col-md-4">' +
-              '<p class="well">But the full-width layout means that you wont be using containers.</p>' +
-            '</div>' +
-            '<div class="col-md-4">' +
-              '<p class="well">Three Column Example</p>' +
-            '</div>' +
-            '<div class="col-md-4">' +
-              '<p class="well">Three Column Example</p>' +
-            '</div>' +
-            '<div class="col-md-4">' +
-              '<p class="well">You get the idea! Do whatever you want in the page content area!</p>' +
+              '<p class="well">画笔颜色：{{stroke}}</p>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -106,6 +92,14 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
 
       rtpg.initializeModel = function (model) {
         rtpg.list.initializeModel(model);
+      };
+
+      rtpg.clear = function (para) {
+        if("data" == para){
+          rtpg.realtimeDoc.getModel().getRoot().get('data').clear();
+        }else if("graph" == para){
+          graphService.clearGraph();
+        }
       };
 
       rtpg.onFileLoaded = function (doc) {
@@ -150,7 +144,7 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
       };
 
       rtpg.list.onRealtimeRemoved = function (evt) {
-        graphService.clearGraph();
+        rtpg.clear("graph");
         rtpg.list.connectUi();
       };
 
@@ -270,7 +264,14 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         return dataMap;
       }
 
-      store.load("svg/5", rtpg.onFileLoaded, rtpg.initializeModel, rtpg.handleErrors);
+      $scope.goodowConstant = goodowConstant;
+      store.load($scope.goodowConstant.boardId, rtpg.onFileLoaded, rtpg.initializeModel, rtpg.handleErrors);
+      $scope.$watch("goodowConstant.boardId", function(n,o){
+        if(n != o){
+          rtpg.clear("graph"); //清空画板
+          store.load(n, rtpg.onFileLoaded, rtpg.initializeModel, rtpg.handleErrors);
+        }
+      });
 
       //发送数据
       $scope.$watch('sendData', function () {
@@ -281,7 +282,7 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
 
       //清空数据
       $scope.clearSVG = function(){
-        rtpg.realtimeDoc.getModel().getRoot().get('data').clear();
+        rtpg.clear("data");
       }
 
       //设置图形
@@ -307,40 +308,38 @@ angular.module('drive.web.svg.controllers', ['drive.web.svg.services'])
         }
       }
     }])
-    .controller("ModalDemoCtrl",["$scope","$modal","$log",function($scope, $modal, $log){
-      $scope.items = ['item1', 'item2', 'item3'];
+    .controller("ModalDemoCtrl",["$scope","$modal","$log","goodowConstant",function($scope, $modal, $log,goodowConstant){
+      //angularjs modal 使用方法http://stackoverflow.com/questions/18935476/angularjs-ui-modal-forms
+      $scope.board = {
+        boardId: null,
+        width: 500,
+        height: 800
+      };
 
-      $scope.open = function (size) {
-
+      $scope.open = function (template) {
         var modalInstance = $modal.open({
-          templateUrl: 'myModalContent.html',
+          templateUrl: template+'.html',
           controller: ModalInstanceCtrl,
-          size: size,
+          size: '',
           resolve: {
-            items: function () {
-              return $scope.items;
+            board: function () {
+              return $scope.board;
             }
           }
         });
 
-        modalInstance.result.then(function (selectedItem) {
-          $scope.selected = selectedItem;
+        modalInstance.result.then(function (board) {
+          goodowConstant.setBoardId(board.boardId);
         }, function () {
           $log.info('Modal dismissed at: ' + new Date());
         });
       };
 
-      var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
-
-        $scope.items = items;
-        $scope.selected = {
-          item: $scope.items[0]
+      var ModalInstanceCtrl = function ($scope, $modalInstance, board) {
+        $scope.boardModal = board;
+        $scope.submit = function () {
+          $modalInstance.close(board);
         };
-
-        $scope.ok = function () {
-          $modalInstance.close($scope.selected.item);
-        };
-
         $scope.cancel = function () {
           $modalInstance.dismiss('cancel');
         };
@@ -647,10 +646,12 @@ var serviceModule;
 
   serviceModule = angular.module('drive.web.svg.services', [])
       .factory('goodowConstant', function () {
-        return {
-          SVG_SID: 'someaddress.s',
-          SERVER: 'http://lgr.goodow.com:1986/channel'
+        this.SERVER = 'http://realtime.goodow.com:1986/channel';
+        this.boardId = 'svg/5';
+        this.setBoardId = function(id) {
+          this.boardId = "svg/" + id;
         }
+        return this;
       })
       .factory('realtimeService', ['goodowConstant', function (goodowConstant) {
         return function () {
