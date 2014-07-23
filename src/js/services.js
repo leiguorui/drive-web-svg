@@ -10,10 +10,12 @@ var serviceModule;
 
   serviceModule = angular.module('drive.web.svg.services', [])
       .factory('goodowConstant', function () {
-        return {
-          SVG_SID: 'someaddress.s',
-          SERVER: 'http://lgr.goodow.com:1986/channel'
+        this.SERVER = 'http://realtime.goodow.com:1986/channel';
+        this.boardId = 'svg/5';
+        this.setBoardId = function(id) {
+          this.boardId = "svg/" + id;
         }
+        return this;
       })
       .factory('realtimeService', ['goodowConstant', function (goodowConstant) {
         return function () {

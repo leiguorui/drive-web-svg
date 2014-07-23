@@ -51,11 +51,6 @@ angular.module('drive.web.svg', [
                     '<span class="glyphicon glyphicon-th"></span> 取色' +
                   '</button>' +
                 '</div>' +
-                '<div class="btn-group">' +
-                  '<button type="button" class="btn btn-default">' +
-                    '<span class="glyphicon glyphicon-share-alt"></span> 邀请' +
-                  '</button>' +
-                '</div>' +
               '</div>' +
             '</div>' +
             '<div class="col-md-8">' +
@@ -64,19 +59,10 @@ angular.module('drive.web.svg', [
               '</p>' +
             '</div>' +
             '<div class="col-md-4">' +
-              '<p class="well">输出信息.</p>' +
+              '<p class="well">画板编号：{{goodowConstant.boardId}}.</p>' +
             '</div>' +
             '<div class="col-md-4">' +
-              '<p class="well">But the full-width layout means that you wont be using containers.</p>' +
-            '</div>' +
-            '<div class="col-md-4">' +
-              '<p class="well">Three Column Example</p>' +
-            '</div>' +
-            '<div class="col-md-4">' +
-              '<p class="well">Three Column Example</p>' +
-            '</div>' +
-            '<div class="col-md-4">' +
-              '<p class="well">You get the idea! Do whatever you want in the page content area!</p>' +
+              '<p class="well">画笔颜色：{{stroke}}</p>' +
             '</div>' +
           '</div>' +
         '</div>' +
