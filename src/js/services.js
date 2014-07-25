@@ -10,7 +10,7 @@ var serviceModule;
 
   serviceModule = angular.module('drive.web.svg.services', [])
       .factory('goodowConstant', function () {
-        this.SERVER = 'http://lgr.goodow.com:1986/channel';
+        this.SERVER = 'http://realtime.goodow.com:1986/channel';
         this.boardId = 'svg/5';
         this.setBoardId = function(id) {
           this.boardId = "svg/" + id;
