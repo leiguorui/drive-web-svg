@@ -124,7 +124,7 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
         var textLabels = text
                          .attr("x", d3.event.offsetX)
                          .attr("y", d3.event.offsetY)
-                         .text( "文字")
+                         .text("文字")
                          .attr("fill", "red");
         var sendData = {};
         sendData.text = {};
@@ -137,6 +137,8 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
           scope.sendData = sendData;
           console.log(JSON.stringify(sendData));
         });
+      }else if(scope.shape == 'drag') {
+
       }
     });
 

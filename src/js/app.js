@@ -36,6 +36,9 @@ angular.module('drive.web.svg', [
                   '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'text\')">' +
                   '<span class="glyphicon glyphicon-font"></span> 文字' +
                   '</button>' +
+                  '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'drag\')">' +
+                  '<span class="glyphicon glyphicon-move"></span> 移动' +
+                  '</button>' +
                 '</div>' +
                 '<div class="btn-group">' +
                   '<button type="button" class="btn btn-default" ng-disabled="undoButtonStatus" ng-click="doAction(\'undo\')">' +
