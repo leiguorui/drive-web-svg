@@ -36,6 +36,9 @@ angular.module('drive.web.svg', [
                   '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'text\')">' +
                   '<span class="glyphicon glyphicon-font"></span> 文字' +
                   '</button>' +
+                  '<button type="button" class="btn btn-default" ng-click="shapeSelecter(\'drag\')">' +
+                  '<span class="glyphicon glyphicon-move"></span> 移动' +
+                  '</button>' +
                 '</div>' +
                 '<div class="btn-group">' +
                   '<button type="button" class="btn btn-default" ng-disabled="undoButtonStatus" ng-click="doAction(\'undo\')">' +
@@ -472,7 +475,7 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
         var textLabels = text
                          .attr("x", d3.event.offsetX)
                          .attr("y", d3.event.offsetY)
-                         .text( "文字")
+                         .text("文字")
                          .attr("fill", "red");
         var sendData = {};
         sendData.text = {};
@@ -485,6 +488,8 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
           scope.sendData = sendData;
           console.log(JSON.stringify(sendData));
         });
+      }else if(scope.shape == 'drag') {
+
       }
     });
 
@@ -646,7 +651,7 @@ var serviceModule;
 
   serviceModule = angular.module('drive.web.svg.services', [])
       .factory('goodowConstant', function () {
-        this.SERVER = 'http://realtime.goodow.com:1986/channel';
+        this.SERVER = 'http://lgr.goodow.com:1986/channel';
         this.boardId = 'svg/5';
         this.setBoardId = function(id) {
           this.boardId = "svg/" + id;
@@ -702,7 +707,6 @@ var serviceModule;
           if (config.transform) {
             goodowUtil.transform(rect, 'rotate(' + config.transform.rotate + 'deg)');
           }
-
         };
 
         var ellipseGenerator = function (config, svgElement) {
@@ -722,6 +726,27 @@ var serviceModule;
 //                          .style('transform', 'rotate(' + config.transform.rotate + 'deg)');
             goodowUtil.transform(ellipse, 'rotate(' + config.transform.rotate + 'deg)');
           }
+
+
+          // Define drag beavior
+          var drag = d3.behavior.drag()
+              .on("drag", dragmove);
+
+          function dragmove(d, index) {
+            d.x += d3.event.dx;
+            d.y += d3.event.dy;
+
+            d3.select(this).attr("transform", "translate(" + d.x + "," + d.y + ")");
+          }
+
+          ellipse.style("cursor", "pointer")
+              .call(drag)
+              .on("mouseover", function () {
+                d3.select(this).style("fill", "aliceblue");
+              })
+              .on("mouseout", function () {
+                d3.select(this).style("fill", "none");
+              });
         }
 
         var pathGenerator = function (config, svgElement) {
