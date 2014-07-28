@@ -76,48 +76,7 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
 
     d3.select(svgElement).on('click', function () {
       var self_ = this;
-      if (scope.shape == 'line') {
-        if (configuration.d.length == 0) {
-          configuration.type = 'path';
-          configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
-          configuration.canDraw = true;
-          configuration.hasDrawFinish = false;
-          line = initDrawPen(configuration);
-        } else {
-          d3.select(self_).attr('style', 'cursor:default');
-          configuration.canDraw = false;
-          configuration.hasDrawFinish = true;
-          var sendData = {};
-          var path_stroke_width = (scope.stroke_width == undefined || scope.stroke_width == 0) ? 1 : scope.stroke_width;
-          var path_stroke = scope.stroke == undefined ? 'black' : scope.stroke;
-          line.attr('d', lineFunction(configuration.d))
-              .attr('stroke-width', path_stroke_width)
-              .attr('stroke', path_stroke)
-              .attr('fill', 'none')
-              .attr('stroke-dasharray', '');
-          sendData.path = {};
-          sendData.path['d'] = configuration.d;
-          sendData.path['fill'] = scope.fill;
-          sendData.path['stroke'] = path_stroke;
-          sendData.path['stroke-width'] = path_stroke_width;
-
-          scope.$apply(function (scope) {
-            scope.sendData = sendData;
-            console.log(JSON.stringify(sendData));
-          });
-          configuration = angular.extend({}, defaultConfig);
-          configuration.d = [];
-        }
-
-        d3.select(self_).on('mousemove', function () {
-          if (!configuration.canDraw)
-            return;
-          d3.select(this).attr('style', 'cursor:crosshair');
-          configuration.d = [configuration.d[0]];
-          configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
-          line.attr('d', lineFunction(configuration.d));
-        });
-      }else if(scope.shape == 'text') {
+      if(scope.shape == 'text') {
         var svgContainer = d3.select('#mysvg').append('g');
         var text = svgContainer.append("text");
         //Add SVG Text Element Attributes
@@ -171,15 +130,19 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
           case 'path':
             configuration.type = 'path';
             configuration.d = [];
-            //
             configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
             configuration.canDraw = true;
             configuration.hasDrawFinish = false;
             path = initDrawPen(configuration);
             break;
           case 'line':
-            return;
-
+            configuration.type = 'path';
+            configuration.d = [];
+            configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
+            configuration.canDraw = true;
+            configuration.hasDrawFinish = false;
+            line = initDrawPen(configuration);
+            break;
         }
       }
 
@@ -192,48 +155,64 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
           configuration.canDraw = false;
           configuration.hasDrawFinish = true;
           var sendData = {};
-          if (configuration.type == 'rect') {
-            rect.attr('fill', fill)
-                .attr('stroke-width', scope.stroke_width)
-                .attr('stroke', stroke)
-                .attr('stroke-dasharray', '');
-            sendData.rect = {};
-            sendData.rect['x'] = configuration.startX;
-            sendData.rect['y'] = configuration.startY;
-            sendData.rect['width'] = configuration.width;
-            sendData.rect['height'] = configuration.height;
-            sendData.rect['fill'] = fill;
-            sendData.rect['stroke'] = stroke;
-            sendData.rect['stroke-width'] = scope.stroke_width;
-          } else if (configuration.type == 'ellipse') {
-            ellipse.attr('fill', fill)
-                .attr('stroke-width', scope.stroke_width)
-                .attr('stroke', stroke)
-                .attr('stroke-dasharray', '');
-            sendData.ellipse = {};
-            sendData.ellipse['cx'] = configuration.startX;
-            sendData.ellipse['cy'] = configuration.startY;
-            sendData.ellipse['rx'] = configuration.rx;
-            sendData.ellipse['ry'] = configuration.ry;
-            sendData.ellipse['fill'] = fill;
-            sendData.ellipse['stroke'] = stroke;
-            sendData.ellipse['stroke-width'] = scope.stroke_width;
-          } else if (configuration.type == 'path') {
-            console.log(JSON.stringify(configuration.d));
-            var path_stroke_width = (scope.stroke_width == undefined || scope.stroke_width == 0) ? 1 : scope.stroke_width;
-            var path_stroke = scope.stroke == undefined ? 'black' : scope.stroke;
-            path.attr('d', lineFunction(configuration.d))
-                .attr('stroke-width', path_stroke_width)
-                .attr('stroke', path_stroke)
-                .attr('fill', 'none')
-                .attr('stroke-dasharray', '');
-            sendData.path = {};
-            sendData.path['d'] = configuration.d;
-            sendData.path['fill'] = scope.fill;
-            sendData.path['stroke'] = path_stroke;
-            sendData.path['stroke-width'] = path_stroke_width;
+          switch (scope.shape) {
+            case 'ellipse':
+              ellipse.attr('fill', fill)
+                  .attr('stroke-width', scope.stroke_width)
+                  .attr('stroke', stroke)
+                  .attr('stroke-dasharray', '');
+              sendData.ellipse = {};
+              sendData.ellipse['cx'] = configuration.startX;
+              sendData.ellipse['cy'] = configuration.startY;
+              sendData.ellipse['rx'] = configuration.rx;
+              sendData.ellipse['ry'] = configuration.ry;
+              sendData.ellipse['fill'] = fill;
+              sendData.ellipse['stroke'] = stroke;
+              sendData.ellipse['stroke-width'] = scope.stroke_width;
+              break;
+            case 'rect':
+              rect.attr('fill', fill)
+                  .attr('stroke-width', scope.stroke_width)
+                  .attr('stroke', stroke)
+                  .attr('stroke-dasharray', '');
+              sendData.rect = {};
+              sendData.rect['x'] = configuration.startX;
+              sendData.rect['y'] = configuration.startY;
+              sendData.rect['width'] = configuration.width;
+              sendData.rect['height'] = configuration.height;
+              sendData.rect['fill'] = fill;
+              sendData.rect['stroke'] = stroke;
+              sendData.rect['stroke-width'] = scope.stroke_width;
+              break;
+            case 'path':
+              var path_stroke_width = (scope.stroke_width == undefined || scope.stroke_width == 0) ? 1 : scope.stroke_width;
+              var path_stroke = scope.stroke == undefined ? 'black' : scope.stroke;
+              path.attr('d', lineFunction(configuration.d))
+                  .attr('stroke-width', path_stroke_width)
+                  .attr('stroke', path_stroke)
+                  .attr('fill', 'none')
+                  .attr('stroke-dasharray', '');
+              sendData.path = {};
+              sendData.path['d'] = configuration.d;
+              sendData.path['fill'] = scope.fill;
+              sendData.path['stroke'] = path_stroke;
+              sendData.path['stroke-width'] = path_stroke_width;
+              break;
+            case 'line':
+              var path_stroke_width = (scope.stroke_width == undefined || scope.stroke_width == 0) ? 1 : scope.stroke_width;
+              var path_stroke = scope.stroke == undefined ? 'black' : scope.stroke;
+              line.attr('d', lineFunction(configuration.d))
+                  .attr('stroke-width', path_stroke_width)
+                  .attr('stroke', path_stroke)
+                  .attr('fill', 'none')
+                  .attr('stroke-dasharray', '');
+              sendData.path = {};
+              sendData.path['d'] = configuration.d;
+              sendData.path['fill'] = scope.fill;
+              sendData.path['stroke'] = path_stroke;
+              sendData.path['stroke-width'] = path_stroke_width;
+              break;
           }
-
         }
 //                 realtimeService.publish(goodowConstant.SVG_SID,sendData);
         scope.$apply(function (scope) {
@@ -247,30 +226,38 @@ angular.module('drive.web.svg.directives', ['drive.web.svg.services'])
         d3.select(self_).attr('style', 'cursor:crosshair');
         var endX = d3.event.offsetX;
         var endY = d3.event.offsetY;
-        if (configuration.type == 'rect') {
-          configuration.width = endX - configuration.tempX;
-          configuration.height = endY - configuration.tempY;
-          if (configuration.width < 0) {
-            configuration.startX = endX;
-            configuration.width = Math.abs(configuration.width);
-          }
-          if (configuration.height < 0) {
-            configuration.startY = endY;
-            configuration.height = Math.abs(configuration.height);
-          }
-          paint(rect, configuration);
-        } else if (configuration.type == 'ellipse') {
-          configuration.rx = Math.abs(endX - configuration.tempX) / 2;
-          configuration.ry = Math.abs(endY - configuration.tempY) / 2;
-          configuration.startX = configuration.tempX + (endX - configuration.tempX) / 2;
-          configuration.startY = configuration.tempY + (endY - configuration.tempY) / 2;
-          paint(ellipse, configuration);
-        } else if (configuration.type == 'path') {
-          configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
-          path.attr('d', lineFunction(configuration.d));
+
+        switch (scope.shape) {
+          case 'rect':
+            configuration.width = endX - configuration.tempX;
+            configuration.height = endY - configuration.tempY;
+            if (configuration.width < 0) {
+              configuration.startX = endX;
+              configuration.width = Math.abs(configuration.width);
+            }
+            if (configuration.height < 0) {
+              configuration.startY = endY;
+              configuration.height = Math.abs(configuration.height);
+            }
+            paint(rect, configuration);
+            break;
+          case 'ellipse':
+            configuration.rx = Math.abs(endX - configuration.tempX) / 2;
+            configuration.ry = Math.abs(endY - configuration.tempY) / 2;
+            configuration.startX = configuration.tempX + (endX - configuration.tempX) / 2;
+            configuration.startY = configuration.tempY + (endY - configuration.tempY) / 2;
+            paint(ellipse, configuration);
+            break;
+          case 'path':
+            configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
+            path.attr('d', lineFunction(configuration.d));
+            break;
+          case 'line':
+            configuration.d = [configuration.d[0]];
+            configuration.d.push([d3.event.offsetX, d3.event.offsetY]);
+            line.attr('d', lineFunction(configuration.d));
+            break;
         }
-        //reset configuration
-        // configuration = null;
       });
     });
     //destory handler
