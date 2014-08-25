@@ -71,4 +71,3 @@ angular.module('drive.web.svg', [
         '</div>' +
       '</div>');
 }]);
-
