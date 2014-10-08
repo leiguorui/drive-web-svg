@@ -637,7 +637,7 @@ var serviceModule;
   serviceModule = angular.module('drive.web.svg.services', [])
       .factory('goodowConstant', function () {
 //        this.SERVER = 'http://172.16.1.63:1986/channel';
-        this.SERVER = 'http://krx1.retechcorp.com:1986/channel';
+        this.SERVER = 'http://krx2.retechcorp.com:1986/channel';
 //        vertx runmod com.goodow.drive~drive-server~0.1.0-SNAPSHOT -conf /home/bj/workspace/drive-server/src/main/resources/drive.conf
 //	      this.SERVER = 'http://lgr.goodow.com:1986/channel';
         this.boardId = 'svg/1';
